@@ -1,0 +1,3 @@
+/yolo_service:
+	ros__parameters:
+		model_path: "models/best_block_int8.onnx"
