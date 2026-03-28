@@ -1,0 +1,3 @@
+[submodule "src/serial_connector/3rd/asio"]
+	path = src/serial_connector/3rd/asio
+	url = https://github.com/chriskohlhoff/asio.git
