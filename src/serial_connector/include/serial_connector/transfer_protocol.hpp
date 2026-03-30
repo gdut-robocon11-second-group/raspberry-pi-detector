@@ -1,16 +1,16 @@
 #ifndef MODULES_TRANSFER_PROTOCOL_HPP
 #define MODULES_TRANSFER_PROTOCOL_HPP
 
-#include <functional>
-#include <memory_resource>
 #include <algorithm>
 #include <cstdint>
+#include <functional>
 #include <iterator>
 #include <limits>
 #include <memory>
 #include <memory_resource>
 #include <type_traits>
 #include <vector>
+
 
 #include "verification_algorithm.hpp"
 
@@ -85,7 +85,8 @@ public:
     if (*begin != ((header >> 8) & 0xFF) || *(begin + 1) != (header & 0xFF)) {
       return; // Invalid packet header
     }
-    if (static_cast<std::size_t>(std::distance(begin, end)) < header_size + tail_size) {
+    if (static_cast<std::size_t>(std::distance(begin, end)) <
+        header_size + tail_size) {
       return; // Not enough data for header and tail, wait for more data
     }
     uint16_t size = *(begin + 2) << 8 | *(begin + 3);
@@ -226,8 +227,7 @@ template <typename VerifyAlgorithm> class packet_manager {
 public:
   using packet_t = data_packet<VerifyAlgorithm>;
 
-  packet_manager()
-      : m_receive_buffer(std::pmr::get_default_resource()) {}
+  packet_manager() : m_receive_buffer(std::pmr::get_default_resource()) {}
   ~packet_manager() = default;
 
   void set_send_function(
@@ -246,7 +246,8 @@ public:
   }
 
   template <typename It> void receive(It begin, It end) {
-    m_receive_buffer.resize(m_receive_buffer.size() + std::distance(begin, end));
+    m_receive_buffer.resize(m_receive_buffer.size() +
+                            std::distance(begin, end));
     std::copy(begin, end, m_receive_buffer.end() - std::distance(begin, end));
     while (true) {
       std::pmr::vector<std::uint8_t>::iterator packet_start;

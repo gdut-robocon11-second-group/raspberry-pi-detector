@@ -27,6 +27,7 @@ endif()
 rosidl_generate_interfaces(yolo_interfaces
   "msg/YOLOMsg.msg"
   "srv/YOLOService.srv"
+  "srv/QRCodeService.srv"
   DEPENDENCIES std_msgs std_srvs
 )
 

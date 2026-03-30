@@ -81,7 +81,8 @@ protected:
     co_return;
   }
 
-  asio::awaitable<void> process(gdut::data_packet<gdut::crc16_algorithm> packet) {
+  asio::awaitable<void>
+  process(gdut::data_packet<gdut::crc16_algorithm> packet) {
     // 这里可以处理一个完整的数据包，例如解析协议、发布 ROS2 消息等
     RCLCPP_INFO(node_->get_logger(),
                 "Processing a complete packet with code: %u", packet.code());

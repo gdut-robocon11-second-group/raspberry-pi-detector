@@ -49,6 +49,7 @@ public:
                 CompletionToken>
   auto request_yolo_detections(CompletionToken &&token) {
     using ResponsePtr = yolo_interfaces::srv::YOLOService::Response::SharedPtr;
+    using SharedFuture = yolo_interfaces::srv::YOLOService::SharedFuture;
 
     auto request =
         std::make_shared<yolo_interfaces::srv::YOLOService::Request>();
@@ -61,19 +62,22 @@ public:
           if (!yolo_client_ || !yolo_client_->service_is_ready()) {
             auto ex = asio::get_associated_executor(h);
             asio::dispatch(ex, [h = std::move(h)]() mutable {
-                h(std::make_error_code(std::errc::not_connected), nullptr);
+              h(std::make_error_code(std::errc::not_connected), nullptr);
             });
             return;
           }
 
-          auto shared_handler = std::make_shared<std::decay_t<decltype(h)>>(std::move(h));
-          std::function<void(std::shared_future<ResponsePtr>)> callback =
-            [shared_handler](std::shared_future<ResponsePtr> future) {
-              try {
-                (*shared_handler)(std::error_code{}, future.get());
-              } catch (...) {
-                (*shared_handler)(std::make_error_code(std::errc::io_error), nullptr);
-              }
+          auto shared_handler =
+              std::make_shared<std::decay_t<decltype(h)>>(std::move(h));
+          std::function<void(SharedFuture)> callback =
+              [shared_handler =
+                   std::move(shared_handler)](SharedFuture future) {
+                try {
+                  (*shared_handler)(std::error_code{}, future.get());
+                } catch (...) {
+                  (*shared_handler)(std::make_error_code(std::errc::io_error),
+                                    nullptr);
+                }
               };
 
           yolo_client_->async_send_request(request, std::move(callback));
