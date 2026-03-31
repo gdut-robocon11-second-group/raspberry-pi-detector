@@ -1,3 +1,6 @@
+#ifndef CAMERA_HPP
+#define CAMERA_HPP
+
 #include <mutex>
 #include <opencv2/core.hpp>
 #include <opencv2/core/hal/interface.h>
@@ -43,3 +46,5 @@ private:
   cv::VideoCapture cap_;
   mutable std::mutex mtx_;
 };
+
+#endif // CAMERA_HPP

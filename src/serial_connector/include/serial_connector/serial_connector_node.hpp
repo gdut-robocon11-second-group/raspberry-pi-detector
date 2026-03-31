@@ -49,7 +49,7 @@ public:
                 CompletionToken>
   auto request_yolo_detections(CompletionToken &&token) {
     using ResponsePtr = yolo_interfaces::srv::YOLOService::Response::SharedPtr;
-    using SharedFuture = yolo_interfaces::srv::YOLOService::SharedFuture;
+    using SharedFuture = std::shared_future<ResponsePtr>;
 
     auto request =
         std::make_shared<yolo_interfaces::srv::YOLOService::Request>();
@@ -70,8 +70,7 @@ public:
           auto shared_handler =
               std::make_shared<std::decay_t<decltype(h)>>(std::move(h));
           std::function<void(SharedFuture)> callback =
-              [shared_handler =
-                   std::move(shared_handler)](SharedFuture future) {
+              [shared_handler=std::move(shared_handler)](SharedFuture future) {
                 try {
                   (*shared_handler)(std::error_code{}, future.get());
                 } catch (...) {

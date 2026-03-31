@@ -21,7 +21,7 @@
 
 #include "camera.hpp"
 #include "yolo_interfaces/msg/yolo_msg.hpp"
-#include "yolo_interfaces/srv/qrcode_service.hpp"
+#include "yolo_interfaces/srv/qr_code_service.hpp"
 #include "yolo_interfaces/srv/yolo_service.hpp"
 #include "yolo_model.hpp"
 
